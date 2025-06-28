@@ -1,14 +1,13 @@
 import { ProductDetailsPage } from '@/components/ProductDetailsPage';
 import { RandomizeButton } from '@/components/RandomizeButton';
-import { Product } from '@/types/product';
+import { PRODUCTS } from '@/constants';
 
 export const dynamic = 'force-dynamic';
 
 export default async function SSRProductPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${id}`);
-  const product: Product = await response.json();
+  const product = PRODUCTS.find((product) => product.id.toString() === id)!;
 
   console.log(`SSR PRODUCT DETAILS PAGE #${id} RENDERED`);
 

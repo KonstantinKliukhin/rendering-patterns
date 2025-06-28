@@ -1,11 +1,10 @@
 import { ProductsPage } from '@/components/ProductsPage';
-import { Product } from '@/types/product';
+import { PRODUCTS } from '@/constants';
 
 export const experimental_ppr = true;
 
 export default async function PPRProductsPage() {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`);
-  const products: Product[] = await response.json();
+  const products = PRODUCTS;
 
   console.log('PPR PRODUCTS LIST PAGE RENDERED');
 
