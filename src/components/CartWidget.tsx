@@ -3,7 +3,7 @@ import CartIcon from '../../public/cart.svg';
 import { cookies } from 'next/headers';
 
 export const CartWidget = async () => {
-  const response = await fetch('http://localhost:5002/api/cart', {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart`, {
     next: {
       tags: ['cart'],
     },

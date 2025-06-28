@@ -11,7 +11,7 @@ export const RandomizeButton: FC<RandomizeButtonProps> = ({ productId }) => {
       action={async () => {
         'use server';
 
-        await fetch(`http://localhost:5002/api/products/${productId}`, { method: 'POST' });
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${productId}`, { method: 'POST' });
 
         revalidatePath(`products/${productId}`);
       }}

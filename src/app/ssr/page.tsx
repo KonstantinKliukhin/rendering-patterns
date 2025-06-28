@@ -4,7 +4,7 @@ import { Product } from '@/types/product';
 export const dynamic = 'force-dynamic';
 
 export default async function SSRProductsPage() {
-  const response = await fetch('http://localhost:5002/api/products');
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`);
   const products: Product[] = await response.json();
 
   return (

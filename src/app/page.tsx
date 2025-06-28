@@ -9,7 +9,7 @@ export default function Home() {
       <p className="text-lg text-slate-500 mb-8">Explore different Next.js rendering strategies</p>
       <div className="flex flex-wrap gap-6 justify-center">
         <Link
-          href="http://localhost:5173"
+          href={String(process.env.NEXT_PUBLIC_CSR_URL)}
           className="px-8 py-6 rounded-xl bg-white shadow-lg text-blue-600 font-semibold text-lg border-2 border-indigo-100 hover:scale-105 hover:shadow-xl transition-transform duration-150 text-center"
         >
           CSR
