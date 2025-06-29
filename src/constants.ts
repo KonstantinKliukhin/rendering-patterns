@@ -11,4 +11,4 @@ const getRandomProduct = (i: number): Product => ({
   inStock: faker.datatype.boolean(),
 });
 
-export const PRODUCTS = Array.from({ length: 400 }, getRandomProduct);
+export const PRODUCTS = Array.from({ length: 400 }).map((_, i) => getRandomProduct(i));

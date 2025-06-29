@@ -6,6 +6,8 @@ export const dynamic = 'force-dynamic';
 export default async function SSRProductsPage() {
   const products = PRODUCTS;
 
+  console.log('products', products);
+
   return (
     <ProductsPage
       title="Server Side Rendering (SSR)"
