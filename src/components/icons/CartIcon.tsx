@@ -9,7 +9,8 @@ export const CartIcon = () => {
       style={{
         shapeRendering: 'geometricPrecision',
         textRendering: 'geometricPrecision',
-        imageRendering: 'optimizeQuality' as any,
+        // @ts-expect-error - incorrect type
+        imageRendering: 'optimizeQuality',
         fillRule: 'evenodd',
         clipRule: 'evenodd',
       }}

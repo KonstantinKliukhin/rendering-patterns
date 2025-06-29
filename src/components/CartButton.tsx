@@ -6,7 +6,7 @@ type CartButtonProps = {
   productId: number | string;
 };
 
-export const CartButton: FC<CartButtonProps> = ({ productId }) => {
+export const CartButton: FC<CartButtonProps> = () => {
   return (
     <form
       action={async () => {
