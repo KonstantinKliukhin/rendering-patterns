@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Docker Stats Live</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+<body>
+  <h2>Live Docker Stats</h2>
+  <div id="charts"></div>
+
+  <script>
+    const socket = io();
+
+    const charts = {};
+
+    socket.on("update", (data) => {
+      Object.keys(data).forEach(container => {
+        const c = data[container];
+
+        if (!charts[container]) {
+          // Create charts
+          const div = document.createElement('div');
+          div.innerHTML = `
+            <h3>${container}</h3>
+            <canvas id="cpu-${container}"></canvas>
+            <canvas id="mem-${container}"></canvas>`;
+          document.getElementById('charts').appendChild(div);
+
+          charts[container] = {
+            cpu: new Chart(document.getElementById(`cpu-${container}`), {
+              type: 'line',
+              data: {
+                labels: c.time,
+                datasets: [{
+                  label: 'CPU (%)',
+                  data: c.cpu,
+                  borderColor: 'blue',
+                  fill: false
+                }]
+              }
+            }),
+            mem: new Chart(document.getElementById(`mem-${container}`), {
+              type: 'line',
+              data: {
+                labels: c.time,
+                datasets: [{
+                  label: 'Memory Used',
+                  data: c.mem_used,
+                  borderColor: 'green',
+                  fill: false
+                }]
+              }
+            })
+          };
+        } else {
+          // Push new data to existing charts
+          const cpuChart = charts[container].cpu;
+          const memChart = charts[container].mem;
+
+          c.time.forEach((t, i) => {
+            cpuChart.data.labels.push(t);
+            cpuChart.data.datasets[0].data.push(c.cpu[i]);
+            memChart.data.labels.push(t);
+            memChart.data.datasets[0].data.push(c.mem_used[i]);
+          });
+
+          cpuChart.update();
+          memChart.update();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
