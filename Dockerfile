@@ -26,6 +26,10 @@ COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 
+# Install PM2 globally
+RUN npm install -g pm2
+
 EXPOSE 3000
 
-CMD ["npm", "start"]
+# Use PM2 to run the app in cluster mode
+CMD ["pm2-runtime", "start", "npm", "--", "start", "-i", "max"]
