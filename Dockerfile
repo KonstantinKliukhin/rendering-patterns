@@ -32,4 +32,4 @@ RUN npm install -g pm2
 EXPOSE 3000
 
 # Use PM2 to run the app in cluster mode
-CMD ["pm2-runtime", "start", "npm", "--", "start", "-i", "max"]
+CMD ["pm2-runtime", "start", "npm", "--name", "nextjs", "-i", "max", "--", "run", "start"]
