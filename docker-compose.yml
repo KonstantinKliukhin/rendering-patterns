@@ -7,6 +7,10 @@ services:
       - NODE_ENV=production
     expose:
       - 3000
+    deploy:
+      resources:
+        limits:
+          memory: 3875M
 
   nginx:
     image: nginx:alpine
