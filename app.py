@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from flask_socketio import SocketIO
 import pandas as pd
 import time
@@ -10,6 +10,23 @@ socketio = SocketIO(app)
 @app.route("/")
 def index():
     return render_template("index.html")
+
+@app.route("/data")
+def all_data():
+    try:
+        df = pd.read_csv("stats.csv")
+        grouped = df.groupby('Container')
+        result = {}
+        for name, group in grouped:
+            result[name] = {
+                'time': group['Time'].tolist(),
+                'cpu': group['CPU (%)'].str.replace('%', '').astype(float).tolist(),
+                'mem_used': group['Mem Used'].tolist()
+            }
+        return jsonify(result)
+    except Exception as e:
+        print(f"[ERROR] reading CSV: {e}")
+        return jsonify({})
 
 def background_thread():
     last_len = 0
@@ -29,8 +46,8 @@ def background_thread():
                 socketio.emit("update", result)
                 last_len = len(df)
         except Exception as e:
-            print(f"[Error] {e}")
-        time.sleep(5)  # match your sample interval
+            print(f"[WebSocket ERROR] {e}")
+        time.sleep(5)
 
 @socketio.on("connect")
 def handle_connect():
