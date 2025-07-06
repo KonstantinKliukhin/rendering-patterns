@@ -20,7 +20,12 @@ def all_data():
         for name, group in grouped:
             result[name] = {
                 'time': group['Time'].tolist(),
-                'cpu': group['CPU (%)'].str.replace('%', '').astype(float).tolist(),
+                'cpu': group['CPU (%)']
+                    .astype(str)
+                    .str.replace('%', '', regex=False)
+                    .str.strip()
+                    .astype(float)
+                    .tolist(),
                 'mem_used': group['Mem Used'].tolist()
             }
         return jsonify(result)
