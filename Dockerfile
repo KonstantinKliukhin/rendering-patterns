@@ -1,32 +1,43 @@
-# Install dependencies only when needed
-FROM node:20-alpine AS deps
-WORKDIR /app
-COPY package.json package-lock.json* pnpm-lock.yaml* yarn.lock* ./
-RUN npm install
+## Dockerfile
+################################
+## BUILD ENVIRONMENT ###########
+################################
 
-# Build the app
-FROM node:20-alpine AS builder
-WORKDIR /app
-COPY . .
-COPY --from=deps /app/node_modules ./node_modules
+# Use the official Node.js Alpine image (adjust based on your project's requirements)
+# You can find the appropriate image on Docker Hub: https://hub.docker.com/_/node
+# In this example, we're using node:20-alpine3.20
+# run in termilnal commande line "node --version to get the version of your app"
+FROM node:20-alpine3.20 As build
+
+# Set the working directory inside the container
+WORKDIR /usr/src/app
+
+# Copy package.json and package-lock.json into the container
+COPY package*.json package-lock.json ./
+
+# Install dependencies using npm
+RUN npm ci
+
+# Copy the project files into the working directory
+COPY ./ ./
+
+# Build the React app for production
 RUN npm run build
 
-# Production image
-FROM node:20-alpine AS runner
-WORKDIR /app
+################################
+#### PRODUCTION ENVIRONMENT ####
+################################
 
-ENV NODE_ENV production
+# Use the official NGINX image for production
+FROM nginx:stable-alpine as production
 
-# Set a non-root user (optional)
-# RUN addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
-# USER nextjs
+# copy nginx configuration in side conf.d folder
+COPY --from=build /usr/src/app/nginx /etc/nginx/conf.d
 
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
+# Copy the build output from the dist folder into the Nginx html directory
+COPY --from=build /usr/src/app/out /usr/share/nginx/html
 
 EXPOSE 3000
 
-# Use default Next.js start command
-CMD ["npx", "next", "start"]
+# Run Nginx in the foreground
+ENTRYPOINT ["nginx", "-g", "daemon off;"] 

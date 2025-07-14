@@ -18,6 +18,7 @@ const eslintConfig = [
     },
     rules: {
       'prettier/prettier': 'error',
+      '@next/next/no-img-element': 'off',
     },
   },
   ...compat.extends('plugin:prettier/recommended'),
