@@ -7,6 +7,8 @@ export default async function SSRProductsPage() {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`);
   const products: Product[] = await response.json();
 
+  console.log('SSR product list rendered');
+
   return (
     <ProductsPage
       title="Server Side Rendering (SSR)"
